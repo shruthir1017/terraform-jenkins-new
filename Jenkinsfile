@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/shruthir1017/terraform-jenkins.git'
+                git branch: 'main', url: 'https://github.com/shruthir1017/terraform-jenkins-new.git'
             }
         }
         stage('Terraform init') {
