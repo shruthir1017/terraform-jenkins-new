@@ -47,7 +47,7 @@ pipeline {
                             parameters: [text(name: 'Destroy Plan', description: 'Please review the destroy plan and confirm.', defaultValue: 'Destroying resources may result in loss of data and services.')]
                         }
 
-                        sh "terraform destroy --auto-approve"  // Destroy resources
+                        sh "terraform destroy"  // Destroy resources
                     } else {
                         error "Invalid action selected. Please choose either 'apply' or 'destroy'."
                     }
