@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"  # Specify your desired region
+  region = "us-east-1"  
 }
 
 # VPC creation
@@ -26,7 +26,7 @@ resource "aws_internet_gateway" "my_igw" {
 resource "aws_subnet" "my_public_subnet" {
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = "10.0.1.0/24"  # Specify a subnet CIDR block
-  availability_zone       = "us-east-1a"  # Replace with your desired availability zone
+  availability_zone       = "us-east-1a"  
   map_public_ip_on_launch = true            # Auto-assign public IPs
 
   tags = {
@@ -86,12 +86,12 @@ resource "aws_security_group" "my_sg" {
 
 # Create EC2 instance
 resource "aws_instance" "my_ec2_instance" {
-  ami                    = "ami-0e2c8caa4b6378d8c"  # Replace with your desired AMI ID
-  instance_type          = "t2.micro"      # EC2 instance type (choose according to your needs)
+  ami                    = "ami-0e2c8caa4b6378d8c"  
+  instance_type          = "t2.micro"      
   subnet_id              = aws_subnet.my_public_subnet.id
-  vpc_security_group_ids = [aws_security_group.my_sg.id]  # Correct argument here
+  vpc_security_group_ids = [aws_security_group.my_sg.id]  
   associate_public_ip_address = true       # Assign public IP to EC2 instance
-  key_name               = "newkey"  # Replace with your SSH key pair name
+  key_name               = "newkey"  
 
   tags = {
     Name = "My EC2 Instance"
@@ -121,7 +121,45 @@ resource "aws_instance" "my_ec2_instance" {
             EOF
 }
 
+
 # Output EC2 instance public IP
 output "instance_public_ip" {
   value = aws_instance.my_ec2_instance.public_ip
 }
+
+# Output EC2 instance ID
+output "instance_id" {
+  value = aws_instance.my_ec2_instance.id
+}
+
+# Output VPC ID
+output "vpc_id" {
+  value = aws_vpc.my_vpc.id
+}
+
+# Output Internet Gateway ID
+output "internet_gateway_id" {
+  value = aws_internet_gateway.my_igw.id
+}
+
+# Output Public Subnet ID
+output "public_subnet_id" {
+  value = aws_subnet.my_public_subnet.id
+}
+
+# Output Route Table ID
+output "route_table_id" {
+  value = aws_route_table.my_public_route_table.id
+}
+
+# Output Route Table Association ID
+output "route_table_association_id" {
+  value = aws_route_table_association.my_public_route_table_association.id
+}
+
+# Output Security Group ID
+output "security_group_id" {
+  value = aws_security_group.my_sg.id
+}
+
+
