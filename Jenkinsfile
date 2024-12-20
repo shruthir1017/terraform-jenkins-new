@@ -44,10 +44,21 @@ pipeline {
                         // Manual approval for destroy action
                         if (!params.autoApprove) {
                             input message: "Are you sure you want to destroy all resources?",
-                            parameters: [text(name: 'Destroy Plan', description: 'Please review the destroy plan and confirm.', defaultValue: 'Destroying resources may result in loss of data and services.')]
+                            parameters: [
+                                text(name: 'Destroy Plan', description: 'Please review the destroy plan and confirm. Enter "yes" to proceed.', defaultValue: 'Destroying resources may result in loss of data and services.')
+                            ]
                         }
 
-                        sh "terraform destroy"  // Destroy resources
+                        // Ensure user input "yes" if manual approval is required for destroy
+                        if (!params.autoApprove) {
+                            def confirmation = input message: "Type 'yes' to confirm destruction of resources",
+                            parameters: [string(defaultValue: 'no', description: 'Type "yes" to confirm destruction', name: 'Confirmation')]
+                            if (confirmation != 'yes') {
+                                error "Destruction not confirmed, aborting."
+                            }
+                        }
+
+                        sh "terraform destroy --auto-approve"  // Destroy resources
                     } else {
                         error "Invalid action selected. Please choose either 'apply' or 'destroy'."
                     }
