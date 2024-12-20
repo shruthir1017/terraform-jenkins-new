@@ -39,18 +39,20 @@ pipeline {
                             parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
                         }
 
-                        sh "terraform apply -input=false tfplan"  // Correct interpolation
+                        sh "terraform apply -input=false tfplan"  // Apply the plan
                     } else if (params.action == 'destroy') {
-                        sh "terraform destroy --auto-approve"  // Correct interpolation
+                        // Manual approval for destroy action
+                        if (!params.autoApprove) {
+                            input message: "Are you sure you want to destroy all resources?",
+                            parameters: [text(name: 'Destroy Plan', description: 'Please review the destroy plan and confirm.', defaultValue: 'Destroying resources may result in loss of data and services.')]
+                        }
+
+                        sh "terraform destroy --auto-approve"  // Destroy resources
                     } else {
                         error "Invalid action selected. Please choose either 'apply' or 'destroy'."
                     }
                 }
             }
         }
-
     }
 }
-
-      
-                  
